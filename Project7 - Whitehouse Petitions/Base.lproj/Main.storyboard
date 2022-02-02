@@ -55,8 +55,8 @@
         <!--Navigation Controller-->
         <scene sceneID="06x-wq-njG">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XH8-im-Jzz" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="mostRecent" id="Fni-5S-Nme"/>
+                <navigationController storyboardIdentifier="NavController" automaticallyAdjustsScrollViewInsets="NO" id="XH8-im-Jzz" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" systemItem="mostRecent" id="Fni-5S-Nme"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="t88-2u-Wqo">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
