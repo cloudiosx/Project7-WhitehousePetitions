@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
-        if let tabBarController = window?.rootViewController as? UITabBarController {
+        if let tabBarController = window?.rootViewController as? UITabBarController { // https://stackoverflow.com/questions/56611054/xcode-11-beta-appdelegate-file-doesnt-have-window-global-variable
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "NavController")
             vc.tabBarItem = UITabBarItem(tabBarSystemItem: .topRated, tag: 1)
