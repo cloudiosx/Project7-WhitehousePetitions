@@ -30,8 +30,11 @@ class ViewController: UITableViewController {
             if let data = try? Data(contentsOf: url) {
                 // We're OK to parse!
                 parse(json: data)
+                return
             }
         }
+        
+        showError()
     }
     
     // Method
@@ -43,6 +46,14 @@ class ViewController: UITableViewController {
             petitions = jsonPetitions.results
             tableView.reloadData()
         }
+    }
+    
+    // Error handling
+    
+    func showError() {
+        let ac = UIAlertController(title: "Loading error", message: "There was a problem loading the feed; please check your connection and try again.", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
     }
     
     // Table view methods
