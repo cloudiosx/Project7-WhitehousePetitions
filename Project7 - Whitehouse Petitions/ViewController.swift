@@ -11,6 +11,7 @@ class ViewController: UITableViewController {
     
 //    var petitions = [String]()
     var petitions = [Petition]()
+    var filteredPetitions = [Petition]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +19,7 @@ class ViewController: UITableViewController {
         
         // UIBarButtonItem
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Filter", style: .plain, target: self, action: #selector(filterPetitions))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Credits", style: .plain, target: self, action: #selector(showAlert))
         
         let urlString: String
@@ -43,6 +45,20 @@ class ViewController: UITableViewController {
     
     // Objective-C
     
+    @objc func filterPetitions() {
+        let ac = UIAlertController(title: "Enter a string", message: nil, preferredStyle: .alert)
+        ac.addTextField()
+        
+        let alertAction = UIAlertAction(title: "Filter", style: .default) { [weak self, weak ac] _ in
+            guard let filteredText = ac?.textFields?[0].text?.lowercased() else { return }
+            self?.filter(filteredText)
+        }
+        
+        ac.addAction(alertAction)
+        present(ac, animated: true, completion: nil)
+        filteredPetitions.removeAll() // https://stackoverflow.com/questions/31183431/swift-delete-all-array-elements
+    }
+    
     @objc func showAlert() {
         let ac = UIAlertController(title: "More info", message: "This data comes from the We The People API of the Whitehouse", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
@@ -60,6 +76,15 @@ class ViewController: UITableViewController {
         }
     }
     
+    func filter(_ text: String) {
+        for petition in petitions {
+            if (petition.title.lowercased().contains(text) || petition.body.lowercased().contains(text)) {
+                filteredPetitions.append(petition)
+            }
+        }
+        tableView.reloadData()
+    }
+    
     // Error handling
     
     func showError() {
@@ -71,19 +96,27 @@ class ViewController: UITableViewController {
     // Table view methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return petitions.count
+        return filteredPetitions.count > 0 ? filteredPetitions.count : petitions.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let petition = petitions[indexPath.row]
-        cell.textLabel?.text = petition.title
-        cell.detailTextLabel?.text = petition.body
-        /*
-        cell.textLabel?.text = "Title goes here"
-        cell.detailTextLabel?.text = "Subtitle goes here" // https://forums.raywenderlich.com/t/chapter-19-uitableviewcell-detailtextlabel-is-deprecated/132259
-        */
-        return cell
+        if (filteredPetitions.count > 0) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+            let filteredPetition = filteredPetitions[indexPath.row]
+            cell.textLabel?.text = filteredPetition.title
+            cell.detailTextLabel?.text = filteredPetition.body
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+            let petition = petitions[indexPath.row]
+            cell.textLabel?.text = petition.title
+            cell.detailTextLabel?.text = petition.body
+            /*
+            cell.textLabel?.text = "Title goes here"
+            cell.detailTextLabel?.text = "Subtitle goes here" // https://forums.raywenderlich.com/t/chapter-19-uitableviewcell-detailtextlabel-is-deprecated/132259
+            */
+            return cell
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
