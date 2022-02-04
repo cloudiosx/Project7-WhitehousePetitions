@@ -16,6 +16,10 @@ class ViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        // UIBarButtonItem
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Credits", style: .plain, target: self, action: #selector(showAlert))
+        
         let urlString: String
         
         if navigationController?.tabBarItem.tag == 0 {
@@ -35,6 +39,14 @@ class ViewController: UITableViewController {
         }
         
         showError()
+    }
+    
+    // Objective-C
+    
+    @objc func showAlert() {
+        let ac = UIAlertController(title: "More info", message: "This data comes from the We The People API of the Whitehouse", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(ac, animated: true, completion: nil)
     }
     
     // Method
