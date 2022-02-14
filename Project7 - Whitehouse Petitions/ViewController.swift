@@ -51,7 +51,9 @@ class ViewController: UITableViewController {
         
         let alertAction = UIAlertAction(title: "Filter", style: .default) { [weak self, weak ac] _ in
             guard let filteredText = ac?.textFields?[0].text?.lowercased() else { return }
-            self?.filter(filteredText)
+            DispatchQueue.global(qos: .userInitiated).async {
+                self?.filter(filteredText)
+            }
         }
         
         ac.addAction(alertAction)
@@ -77,12 +79,15 @@ class ViewController: UITableViewController {
     }
     
     func filter(_ text: String) {
-        for petition in petitions {
+        for petition in self.petitions {
             if (petition.title.lowercased().contains(text) || petition.body.lowercased().contains(text)) {
-                filteredPetitions.append(petition)
+                self.filteredPetitions.append(petition)
             }
         }
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     // Error handling
